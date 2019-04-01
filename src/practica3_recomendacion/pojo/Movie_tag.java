@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion.pojo;
+package practica3_recomendacion.pojo;
 
 /**
  *

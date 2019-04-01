@@ -3,17 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion;
+package practica3_recomendacion;
 
-import practica2_recomendacion.pojo.Movie_tag;
-import practica2_recomendacion.pojo.User;
-import practica2_recomendacion.pojo.Recomendacion;
-import practica2_recomendacion.pojo.Movie_title;
-import practica2_recomendacion.pojo.Rating;
-import practica2_recomendacion.views.MovieView;
-import practica2_recomendacion.views.RatingView;
-import practica2_recomendacion.views.UserView;
-import practica2_recomendacion.views.TagView;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import practica3_recomendacion.pojo.Movie_tag;
+import practica3_recomendacion.pojo.User;
+import practica3_recomendacion.pojo.Recomendacion;
+import practica3_recomendacion.pojo.Movie_title;
+import practica3_recomendacion.pojo.Rating;
+import practica3_recomendacion.views.MovieView;
+import practica3_recomendacion.views.RatingView;
+import practica3_recomendacion.views.UserView;
+import practica3_recomendacion.views.TagView;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -63,8 +67,21 @@ public class Controller {
     public void showMovies(){
         movieView.printMovies(listMovies);
     }
-    public void ConstruirModelo(){
-         
+    public void ConstruirModelo(List<String> ficherosTraining){
+       //CARGAR FICHEROS TRAINING -> RELLENADO DE LISTRATING
+        Recursos r=new Recursos();
+        listRatings.clear();
+        mapVecinos.clear();
+        mapMovies.clear();
+        mapComparadorItems.clear();
+        mapVecinos.clear();
+        listPredicciones.clear();
+        for(String name:ficherosTraining){
+           LoadFileRatings(name);
+        }
+        
+        
+        
        Set<Integer> users=BuildUserUniques();
         //  1) SIMILITUD. FUNCION DE SIMILITUD COEF. CORRELACIÓN DE PEARSON [-1,1] selec >0
        init(users);
@@ -293,5 +310,26 @@ public class Controller {
             }
             listAllProd.removeAll(listUserProd);
             return listAllProd;
+    }
+        
+        
+        
+        public void LoadFileRatings(String nameFile){
+            String filePath = new File("").getAbsolutePath();
+            String line = "";
+            String cvsSplitBy = ",";
+           // List<Rating> l = new ArrayList<>(); 
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath + "/data/"+nameFile))) {
+                while ((line = br.readLine()) != null) {
+                    // use comma as separator
+                    String[] part = line.split(cvsSplitBy);
+                    listRatings.add(new Rating(Integer.parseInt(part[0]),
+                                        Integer.parseInt(part[1]),
+                                        Double.parseDouble(part[2])));   
+               }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 }

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion;
-import practica2_recomendacion.pojo.Movie_tag;
-import practica2_recomendacion.pojo.User;
-import practica2_recomendacion.pojo.Movie_title;
-import practica2_recomendacion.pojo.Rating;
+package practica3_recomendacion;
+import practica3_recomendacion.pojo.Movie_tag;
+import practica3_recomendacion.pojo.User;
+import practica3_recomendacion.pojo.Movie_title;
+import practica3_recomendacion.pojo.Rating;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

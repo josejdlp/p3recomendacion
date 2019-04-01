@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion.views;
+package practica3_recomendacion.views;
 
 import java.util.List;
-import practica2_recomendacion.pojo.Movie_title;
+import practica3_recomendacion.pojo.Movie_title;
 
 /**
  *

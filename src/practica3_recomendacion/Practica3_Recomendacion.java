@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion;
+package practica3_recomendacion;
 
-import practica2_recomendacion.pojo.Movie_tag;
-import practica2_recomendacion.pojo.User;
-import practica2_recomendacion.pojo.Movie_title;
-import practica2_recomendacion.pojo.Rating;
-import practica2_recomendacion.views.MovieView;
-import practica2_recomendacion.views.RatingView;
-import practica2_recomendacion.views.UserView;
-import practica2_recomendacion.views.TagView;
+import practica3_recomendacion.pojo.Movie_tag;
+import practica3_recomendacion.pojo.User;
+import practica3_recomendacion.pojo.Movie_title;
+import practica3_recomendacion.pojo.Rating;
+import practica3_recomendacion.views.MovieView;
+import practica3_recomendacion.views.RatingView;
+import practica3_recomendacion.views.UserView;
+import practica3_recomendacion.views.TagView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +27,7 @@ import java.util.Scanner;
 
 
 
-public class Practica1_Recomendacion {
+public class Practica3_Recomendacion {
 
     /**
      * @param args the command line arguments
@@ -49,7 +49,7 @@ public class Practica1_Recomendacion {
        
        //Load Files
        Recursos r=new Recursos();
-       lrating=r.LoadFileRatings("ratings.csv");
+       //lrating=r.LoadFileRatings("ratings.csv");
        lmovie=r.LoadFileMovies("movie-titles.csv");
        ltag=r.LoadFileTags("movie-tags.csv");
        luser=r.LoadFileUsers("users.csv");
@@ -59,8 +59,44 @@ public class Practica1_Recomendacion {
      
        //INIT APP:
        Scanner in = new Scanner(System.in);
-       System.out.println("Construyendo modelo......");
-       controller.ConstruirModelo();
+      
+       
+       //Rellenar lista de TRAINING iterar por todos los ficheros
+       List<String> lt=new ArrayList<>(); //Lista que contiene el nombre de los ficheros para TRAINING
+      
+      // List<Integer> indices=new ArrayList<>();
+       for(int t=0;t<5;t++){
+            System.out.println("PRUEBA:"+t+1);
+          // indices.clear();
+           int test=t;
+           for(int i=0;i<5;i++){
+                if(i!=test){
+                    String nombre="ratings_train_"+i+".csv";
+                    lt.add(nombre);
+                    //indices.add(i);
+                    System.out.println("Training: rating-"+i);
+                 }
+           }
+           System.out.println("Test: test-"+test);
+           //Cargar ficheros de TRAINING: ratings
+           System.out.println("Construyendo modelo......");
+           controller.ConstruirModelo(lt);
+           
+           //Realizar predicciones con TEST
+           
+           
+           
+           
+           
+           
+           
+       }
+       
+       
+       
+       
+       
+      /* controller.ConstruirModelo(listFicherosTraining);
        System.out.println("Modelo construido.");
         Integer id = -2;
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -70,8 +106,7 @@ public class Practica1_Recomendacion {
             try {
                 List<Movie_title> lMoviesRecom=new ArrayList<>();
                 id = Integer.valueOf(reader.readLine());
-                //TF-IDF
-                //Perfiles de productos
+                
                 if(id==-1){break;}
                 lMoviesRecom=controller.RecommendMovies(id);
                 
@@ -90,7 +125,7 @@ public class Practica1_Recomendacion {
        
       System.out.println("FINALIZADO");
        
-       
+       */
      
     }
     

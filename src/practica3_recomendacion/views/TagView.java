@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package practica2_recomendacion.views;
+package practica3_recomendacion.views;
 
 /**
  *
  * @author UJA
  */
-public class RatingView {
+public class TagView {
     
 }
