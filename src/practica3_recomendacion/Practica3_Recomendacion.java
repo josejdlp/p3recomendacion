@@ -65,11 +65,10 @@ public class Practica3_Recomendacion {
       
       // List<Integer> indices=new ArrayList<>();
        for(int i=0;i<5;i++){
+            System.out.println("____________________________________________");
             System.out.println("PRUEBA:"+i);
             String nombre="ratings_train_"+i+".csv";
-
-            System.out.println("____________________________________________");
-               System.out.println("Construyendo training.... "+nombre);
+            System.out.println("Construyendo training.... "+nombre);
             controller.ConstruirModelo(nombre);
 
             System.out.println("Training construido. "+nombre);
@@ -87,8 +86,9 @@ public class Practica3_Recomendacion {
            
            
        }
-       
-       
+       System.out.println("**********");
+       System.out.println("Suma de los MAEs / 5: "+(controller.media/5));
+        System.out.println("**********");
        
        
        

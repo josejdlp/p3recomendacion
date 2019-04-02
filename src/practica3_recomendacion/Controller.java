@@ -42,6 +42,7 @@ public class Controller {
     private List<Movie_tag> listTags;
     private List<Rating> listRatings;
     private MovieView movieView;
+    public double media;
    //similitud
      Map<Integer,List<Recomendacion>> mapComparadorItems;
      Map<Integer,List<Recomendacion>> mapVecinos;
@@ -65,6 +66,7 @@ public class Controller {
         for(Movie_title mt:listMovies){
             mapMovies.put(mt.getIdItem(), mt.getTitle());
         }
+        media=0.0;
     }
     public void showMovies(){
         movieView.printMovies(listMovies);
@@ -123,8 +125,6 @@ public class Controller {
                 prodsNews.add(item);
             
             }
-            
-            
             //PREDICCION
              CalcularPredicciones(user,prodsNews);
              /*for(Recomendacion key:listPredicciones){
@@ -138,7 +138,7 @@ public class Controller {
                 Double prediccion=r.getValor();
                 if(prediccion>0.0){
                      Double real=mapTestRating.get(user).get(r.getIdMovie());
-                     Double diferencia=prediccion-real;
+                     Double diferencia=Math.abs(prediccion-real);
                      total=total+diferencia;
                      n=n+1;
                 }
@@ -147,10 +147,10 @@ public class Controller {
             
             
         }
-       
+     
        Double resultado=total/n;
        System.out.println("MAE:"+resultado);
-       
+       media=media+resultado;
        
        
        /*
@@ -175,25 +175,26 @@ public class Controller {
            double numerador=0;
            int contadork=0;
            for(Recomendacion prodVecino:mapVecinos.get(prodPredecir)){
-               if(contadork>=k){
-                   break;
-               }else{
-                  // System.out.println(prodVecino.getIdMovie());
-                   //System.out.println(idUser);
-                   double nota=0.0;
-                   try{
-                        nota=mapRatings.get(prodVecino.getIdMovie()).get(idUser);
-                   }catch(Exception e){
+               try{
+                        if(contadork>=k){
+                            break;
+                        }else{
+                           // System.out.println(prodVecino.getIdMovie());
+                            //System.out.println(idUser);
+                            double nota=0.0;
+                                if(mapRatings.get(prodVecino.getIdMovie()).containsKey(idUser)){
+                                   nota=mapRatings.get(prodVecino.getIdMovie()).get(idUser);
+                                    if(nota!=0.0){
+                                        double similitud=prodVecino.getValor();
+                                        numerador=numerador+(similitud*nota);
+                                        sumasimilitud=sumasimilitud+similitud;
+                                        contadork=contadork+1;
+                                    }
+                                }
+                        }
+                 }catch(Exception e){
                        System.out.println("Execpcion"+e.toString());
                    }
-                  
-                   if(nota!=0.0){
-                        double similitud=prodVecino.getValor();
-                        numerador=numerador+(similitud*nota);
-                        sumasimilitud=sumasimilitud+similitud;
-                        contadork=contadork+1;
-                   }
-               } 
            }
            prediccion=numerador/sumasimilitud;
            Recomendacion rec=new Recomendacion(prodPredecir, prediccion);
@@ -230,9 +231,14 @@ public class Controller {
         for(Movie_title m:listMovies){
             //Init rating por cada user
             Map<Integer,Double> userRating=new HashMap<>();
-            for(Integer u:users){
+           /* for(Integer u:users){
                         userRating.put(u, 0.0);
-            }
+            }*/
+           for(Rating ra:listRatings){
+               if(!userRating.containsKey(ra.getIdUser())){
+                   userRating.put(ra.getIdUser(), 0.0);
+               }
+           }
             mapRatings.put(m.getIdItem(), userRating);
         }
         //Rellenar mapRating
