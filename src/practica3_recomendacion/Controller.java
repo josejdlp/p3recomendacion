@@ -46,6 +46,7 @@ public class Controller {
      Map<Integer,List<Recomendacion>> mapComparadorItems;
      Map<Integer,List<Recomendacion>> mapVecinos;
     private Map<Integer,Map<Integer,Double>> mapRatings;
+    private Map<Integer,Map<Integer,Double>> mapTestRating;
     private Map<Integer,String> mapMovies;
     private List<Recomendacion> listPredicciones;
     public Controller(List<Movie_title> _lm,List<Movie_tag> _lt,List<User> _lu,List<Rating> _lr,
@@ -58,6 +59,7 @@ public class Controller {
          this.mapComparadorItems=new HashMap<>();
         this.mapVecinos=new HashMap<>();
         this.mapRatings=new HashMap<>();
+        this.mapTestRating=new HashMap<>();
         this.listPredicciones=new ArrayList<>();
         //cargar mapa movies
         for(Movie_title mt:listMovies){
@@ -67,7 +69,7 @@ public class Controller {
     public void showMovies(){
         movieView.printMovies(listMovies);
     }
-    public void ConstruirModelo(List<String> ficherosTraining){
+    public void ConstruirModelo(String ficheroTraining){
        //CARGAR FICHEROS TRAINING -> RELLENADO DE LISTRATING
         Recursos r=new Recursos();
         listRatings.clear();
@@ -76,16 +78,14 @@ public class Controller {
         mapComparadorItems.clear();
         mapVecinos.clear();
         listPredicciones.clear();
-        for(String name:ficherosTraining){
-           LoadFileRatings(name);
-        }
+        mapTestRating.clear();
         
-        
-        
+       LoadFileRatings(ficheroTraining);
        Set<Integer> users=BuildUserUniques();
-        //  1) SIMILITUD. FUNCION DE SIMILITUD COEF. CORRELACIÓN DE PEARSON [-1,1] selec >0
        init(users);
-        Map<Integer,List<Recomendacion>> prodSim=CalculateProdSimilares();
+        //  1) SIMILITUD. FUNCION DE SIMILITUD COEF. CORRELACIÓN DE PEARSON [-1,1] selec >0
+       
+       Map<Integer,List<Recomendacion>> prodSim=CalculateProdSimilares();
        for(Integer k:prodSim.keySet()){
            List<Recomendacion> lists =new ArrayList<>();
            lists=ordenarProdSim(prodSim.get(k));
@@ -105,18 +105,67 @@ public class Controller {
             mapVecinos.put(key,rec);
        }
     }
-    List<Movie_title> RecommendMovies(int idUser){
+    
+    
+    
+    
+    List<Movie_title> RecommendMovies(String ficheroTest){
        List<Movie_title> l=new ArrayList<>();
-       List<Integer> prodsNews=NewProducts(idUser);
-       //3) Calcular la predicción para las películas que NO HA VISTO
+       //Cargar fichero test, sacar el idUsuario y productoAPredecir
+       //CargaTestPredicciones
+        LoadFileTestRating(ficheroTest);
+       int n=0;
+       Double total=0.0;
+        for(Integer user:mapTestRating.keySet()){
+            List<Integer> prodsNews=new ArrayList<>();
+            //Recorremos todos los usuarios para predecir los items de todos
+            for(Integer item:mapTestRating.get(user).keySet()){
+                prodsNews.add(item);
+            
+            }
+            
+            
+            //PREDICCION
+             CalcularPredicciones(user,prodsNews);
+             /*for(Recomendacion key:listPredicciones){
+                    System.out.println(key.getIdMovie()+" :"+key.getValor());
+             }*/
+            
+             //listpredicciones están las perdicciones del usuario user
+             //Calcular MAE
+             
+              for(Recomendacion r:listPredicciones){
+                Double prediccion=r.getValor();
+                if(prediccion>0.0){
+                     Double real=mapTestRating.get(user).get(r.getIdMovie());
+                     Double diferencia=prediccion-real;
+                     total=total+diferencia;
+                     n=n+1;
+                }
+              }
+            int a=3;
+            
+            
+        }
+       
+       Double resultado=total/n;
+       System.out.println("MAE:"+resultado);
+       
+       
+       
+       /*
+       
        CalcularPredicciones(idUser,prodsNews);
        List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
        //mostrar predicciones
        for(Recomendacion key:listFinal){
-           System.out.println(mapMovies.get(key.getIdMovie())+" :"+key.getValor());
-       }
+           System.out.println(key.getIdMovie()+" :"+key.getValor());
+       }*/
         return l;
     }
+    
+    
+    
      private void CalcularPredicciones(Integer idUser,List<Integer> prodsNews){
          listPredicciones.clear();
         //mappredicciones
@@ -129,7 +178,15 @@ public class Controller {
                if(contadork>=k){
                    break;
                }else{
-                   double nota=mapRatings.get(prodVecino.getIdMovie()).get(idUser);
+                  // System.out.println(prodVecino.getIdMovie());
+                   //System.out.println(idUser);
+                   double nota=0.0;
+                   try{
+                        nota=mapRatings.get(prodVecino.getIdMovie()).get(idUser);
+                   }catch(Exception e){
+                       System.out.println("Execpcion"+e.toString());
+                   }
+                  
                    if(nota!=0.0){
                         double similitud=prodVecino.getValor();
                         numerador=numerador+(similitud*nota);
@@ -331,5 +388,36 @@ public class Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-    }
+         }
+        
+        public void LoadFileTestRating(String nameFile){
+            String filePath = new File("").getAbsolutePath();
+            String line = "";
+            String cvsSplitBy = ",";
+           // List<Rating> l = new ArrayList<>(); 
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath + "/data/"+nameFile))) {
+                while ((line = br.readLine()) != null) {
+                    // use comma as separator
+                    String[] part = line.split(cvsSplitBy);
+                    Integer idUser=Integer.parseInt(part[0]);
+                    Integer idItem= Integer.parseInt(part[1]);
+                    Double nota=Double.parseDouble(part[2]);
+                    
+                    Map<Integer,Double> items=new HashMap<>();
+                    if(!mapTestRating.containsKey(idUser)){
+                        items.put(idItem, nota);
+                        mapTestRating.put(idUser, items);
+                    }else{
+                        mapTestRating.get(idUser).put(idItem, nota);
+                    }
+                    
+                    
+                    
+                    
+               }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+         }
 }

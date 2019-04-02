@@ -62,29 +62,25 @@ public class Practica3_Recomendacion {
       
        
        //Rellenar lista de TRAINING iterar por todos los ficheros
-       List<String> lt=new ArrayList<>(); //Lista que contiene el nombre de los ficheros para TRAINING
       
       // List<Integer> indices=new ArrayList<>();
-       for(int t=0;t<5;t++){
-            System.out.println("PRUEBA:"+t+1);
-          // indices.clear();
-           int test=t;
-           for(int i=0;i<5;i++){
-                if(i!=test){
-                    String nombre="ratings_train_"+i+".csv";
-                    lt.add(nombre);
-                    //indices.add(i);
-                    System.out.println("Training: rating-"+i);
-                 }
-           }
-           System.out.println("Test: test-"+test);
-           //Cargar ficheros de TRAINING: ratings
-           System.out.println("Construyendo modelo......");
-           controller.ConstruirModelo(lt);
+       for(int i=0;i<5;i++){
+            System.out.println("PRUEBA:"+i);
+            String nombre="ratings_train_"+i+".csv";
+
+            System.out.println("____________________________________________");
+               System.out.println("Construyendo training.... "+nombre);
+            controller.ConstruirModelo(nombre);
+
+            System.out.println("Training construido. "+nombre);
+           
+           
            
            //Realizar predicciones con TEST
-           
-           
+            System.out.println("Realizando predicciones.... "+nombre);
+           List<Movie_title> lMoviesRecom=new ArrayList<>();
+           nombre="ratings_test_0.csv";
+           lMoviesRecom=controller.RecommendMovies(nombre);
            
            
            
