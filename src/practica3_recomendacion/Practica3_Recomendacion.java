@@ -32,7 +32,7 @@ public class Practica3_Recomendacion {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
        System.out.println("Bienvenido al Sistema de Recomendación de Películas");
        System.out.println("Cargando FICHEROS......");
@@ -53,76 +53,90 @@ public class Practica3_Recomendacion {
        lmovie=r.LoadFileMovies("movie-titles.csv");
        ltag=r.LoadFileTags("movie-tags.csv");
        luser=r.LoadFileUsers("users.csv");
-       System.out.println("FICHEROS cargados satisfactoriamente......");
+       System.out.println("FICHEROS cargados satisfactoriamente: movie-titles.csv,movie-tags.csv,users.csv");
        //Init Controller
        Controller controller=new Controller(lmovie,ltag,luser,lrating,mv,rv,tv,uv);
      
        //INIT APP:
        Scanner in = new Scanner(System.in);
+       Integer data=-1;
+      BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
       
-       
-       //Rellenar lista de TRAINING iterar por todos los ficheros
       
-      // List<Integer> indices=new ArrayList<>();
-       for(int i=0;i<5;i++){
-            System.out.println("____________________________________________");
-            System.out.println("PRUEBA:"+i);
-            String nombre="ratings_train_"+i+".csv";
-            System.out.println("Construyendo training.... "+nombre);
-            controller.ConstruirModelo(nombre);
-
-            System.out.println("Training construido. "+nombre);
-           
-           
-           
-           //Realizar predicciones con TEST
-            System.out.println("Realizando predicciones.... "+nombre);
-           List<Movie_title> lMoviesRecom=new ArrayList<>();
-           nombre="ratings_test_0.csv";
-           lMoviesRecom=controller.RecommendMovies(nombre);
-           
-           
-           
-           
-           
-       }
-       System.out.println("**********");
-       System.out.println("Suma de los MAEs / 5: "+(controller.media/5));
-        System.out.println("**********");
-       
-       
-       
-      /* controller.ConstruirModelo(listFicherosTraining);
-       System.out.println("Modelo construido.");
-        Integer id = -2;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        while(id!=-1){
-            
-            System.out.print("Por favor introduzca el ID del USUARIO (-1 para salir): ");
-            try {
-                List<Movie_title> lMoviesRecom=new ArrayList<>();
-                id = Integer.valueOf(reader.readLine());
-                
-                if(id==-1){break;}
-                lMoviesRecom=controller.RecommendMovies(id);
-                
-                
-               System.out.println("_______________________________________________________________________________________");
-               System.out.println();
-                
-                
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("You entered : " + id);
+       System.out.println();
+       System.out.println("-----------MENÚ----------");
+       System.out.println("1. MAE");
+       System.out.println("2. Precision and Recall");
+       System.out.println("3. nDGC");
+       System.out.println("-1. Salir");
+       System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
+       data = Integer.valueOf(reader.readLine());
+       while(data!=-1){
+           if(null!=data)switch (data) {
+               case 1:
+                   //MAE
+                    System.out.println("CALCULANDO MAE....");
+                   for(int i=0;i<5;i++){
+                       System.out.println("____________________________________________");
+                       System.out.println("PRUEBA:"+i);
+                       String nombre="ratings_train_"+i+".csv";
+                       System.out.println("Construyendo training.... "+nombre);
+                       controller.ConstruirModelo(nombre);
+                       System.out.println("Training construido. "+nombre);
+                       //Realizar predicciones con TEST
+                       System.out.println("Realizando predicciones.... "+nombre);
+                       List<Movie_title> lMoviesRecom=new ArrayList<>();
+                       nombre="ratings_test_0.csv";
+                       lMoviesRecom=controller.RecommendMovies(nombre);
+                   }   System.out.println("**********");
+                    System.out.println("MAE "+(controller.media/5));
+                    System.out.println("**********");
+                    System.out.println();
+                    System.out.println("-----------MENÚ----------");
+                    System.out.println("1. MAE");
+                    System.out.println("2. Precision and Recall");
+                    System.out.println("3. nDGC");
+                    System.out.println("-1. Salir");
+                    System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
+                    data = Integer.valueOf(reader.readLine());
+                   break;
+               case 2:
+                   System.out.println("CALCULANDO PRECISION AND RECALL....");
+                   
+                   
+                    System.out.println();
+                    System.out.println("-----------MENÚ----------");
+                    System.out.println("1. MAE");
+                    System.out.println("2. Precision and Recall");
+                    System.out.println("3. nDGC");
+                    System.out.println("-1. Salir");
+                    System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
+                    data = Integer.valueOf(reader.readLine());
+                   break;
+               case 3:
+                   
+                   
+                   
+                   
+                   System.out.println("CALCULANDO nDCG....");
+                    System.out.println();
+                    System.out.println("-----------MENÚ----------");
+                    System.out.println("1. MAE");
+                    System.out.println("2. Precision and Recall");
+                    System.out.println("3. nDGC");
+                    System.out.println("-1. Salir");
+                    System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
+                    data = Integer.valueOf(reader.readLine());
+                   break;
+               default:
+                   break;
+           }
         
-        }
-       
-      System.out.println("FINALIZADO");
-       
-       */
+             
+ 
+       }
      
     }
+       
     
 }
