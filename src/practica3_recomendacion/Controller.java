@@ -43,6 +43,9 @@ public class Controller {
     private List<Rating> listRatings;
     private MovieView movieView;
     public double media;
+    public double precision;
+    public double recall;
+    
    //similitud
      Map<Integer,List<Recomendacion>> mapComparadorItems;
      Map<Integer,List<Recomendacion>> mapVecinos;
@@ -67,6 +70,8 @@ public class Controller {
             mapMovies.put(mt.getIdItem(), mt.getTitle());
         }
         media=0.0;
+        precision=0.0;
+        recall=0.0;
     }
     public void showMovies(){
         movieView.printMovies(listMovies);
@@ -109,13 +114,51 @@ public class Controller {
     }
     
     
-    
+      List<Movie_title> RecommendMovies_PrecisionRecall(String ficheroTest){ 
+       List<Integer> list_usu_predicho=new ArrayList<>();
+       List<Movie_title> l=new ArrayList<>();
+       //CargaTestPredicciones
+       mapTestRating.clear();
+       LoadFileTestRating(ficheroTest);
+       //por cada usuario del fichero test, pedimos la predicción
+       for(Integer idUser:mapTestRating.keySet()){
+           if(!list_usu_predicho.contains(idUser)){
+               //predecir solo 1 vez el usuario
+               
+                List<Integer> prodsNews=NewProducts(idUser);
+                //3) Calcular la predicción para las películas que NO HA VISTO
+                CalcularPredicciones(idUser,prodsNews);
+                List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
+                //mostrar predicciones
+                for(Recomendacion key:listFinal){
+                    System.out.println(mapMovies.get(key.getIdMovie())+" :"+key.getValor());
+                }
+                // limitar a 10 listPredicciones
+               
+               
+               list_usu_predicho.add(idUser);
+           }
+           int r=3;
+       }
+       int a=2;
+       /*
+       List<Integer> prodsNews=NewProducts(idUser);
+       //3) Calcular la predicción para las películas que NO HA VISTO
+       CalcularPredicciones(idUser,prodsNews);
+       List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
+       //mostrar predicciones
+       for(Recomendacion key:listFinal){
+           System.out.println(mapMovies.get(key.getIdMovie())+" :"+key.getValor());
+       }*/
+       
+        return l;
+    }
     
     List<Movie_title> RecommendMovies(String ficheroTest){
        List<Movie_title> l=new ArrayList<>();
        //Cargar fichero test, sacar el idUsuario y productoAPredecir
        //CargaTestPredicciones
-        LoadFileTestRating(ficheroTest);
+       LoadFileTestRating(ficheroTest);
        int n=0;
        Double total=0.0;
         for(Integer user:mapTestRating.keySet()){
@@ -123,17 +166,9 @@ public class Controller {
             //Recorremos todos los usuarios para predecir los items de todos
             for(Integer item:mapTestRating.get(user).keySet()){
                 prodsNews.add(item);
-            
             }
             //PREDICCION
              CalcularPredicciones(user,prodsNews);
-             /*for(Recomendacion key:listPredicciones){
-                    System.out.println(key.getIdMovie()+" :"+key.getValor());
-             }*/
-            
-             //listpredicciones están las perdicciones del usuario user
-             //Calcular MAE
-             
               for(Recomendacion r:listPredicciones){
                 Double prediccion=r.getValor();
                 if(prediccion>0.0){
@@ -143,24 +178,11 @@ public class Controller {
                      n=n+1;
                 }
               }
-            int a=3;
-            
-            
         }
      
        Double resultado=total/n;
        System.out.println("MAE:"+resultado);
        media=media+resultado;
-       
-       
-       /*
-       
-       CalcularPredicciones(idUser,prodsNews);
-       List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
-       //mostrar predicciones
-       for(Recomendacion key:listFinal){
-           System.out.println(key.getIdMovie()+" :"+key.getValor());
-       }*/
         return l;
     }
     

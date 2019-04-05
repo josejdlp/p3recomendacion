@@ -46,7 +46,6 @@ public class Practica3_Recomendacion {
        RatingView rv=new RatingView();
        TagView tv=new TagView();
        UserView uv=new UserView();
-       
        //Load Files
        Recursos r=new Recursos();
        //lrating=r.LoadFileRatings("ratings.csv");
@@ -56,13 +55,10 @@ public class Practica3_Recomendacion {
        System.out.println("FICHEROS cargados satisfactoriamente: movie-titles.csv,movie-tags.csv,users.csv");
        //Init Controller
        Controller controller=new Controller(lmovie,ltag,luser,lrating,mv,rv,tv,uv);
-     
        //INIT APP:
        Scanner in = new Scanner(System.in);
        Integer data=-1;
-      BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-      
-      
+       BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
        System.out.println();
        System.out.println("-----------MENÚ----------");
        System.out.println("1. MAE");
@@ -78,7 +74,6 @@ public class Practica3_Recomendacion {
                     System.out.println("CALCULANDO MAE....");
                    for(int i=0;i<5;i++){
                        System.out.println("____________________________________________");
-                       System.out.println("PRUEBA:"+i);
                        String nombre="ratings_train_"+i+".csv";
                        System.out.println("Construyendo training.... "+nombre);
                        controller.ConstruirModelo(nombre);
@@ -86,9 +81,10 @@ public class Practica3_Recomendacion {
                        //Realizar predicciones con TEST
                        System.out.println("Realizando predicciones.... "+nombre);
                        List<Movie_title> lMoviesRecom=new ArrayList<>();
-                       nombre="ratings_test_0.csv";
+                       nombre="ratings_test_"+i+".csv";
                        lMoviesRecom=controller.RecommendMovies(nombre);
-                   }   System.out.println("**********");
+                   }  
+                    System.out.println("**********");
                     System.out.println("MAE "+(controller.media/5));
                     System.out.println("**********");
                     System.out.println();
@@ -103,6 +99,24 @@ public class Practica3_Recomendacion {
                case 2:
                    System.out.println("CALCULANDO PRECISION AND RECALL....");
                    
+                    for(int i=0;i<5;i++){
+                       System.out.println("____________________________________________");
+                       String nombre="ratings_train_"+i+".csv";
+                       System.out.println("Construyendo training.... "+nombre);
+                       controller.ConstruirModelo(nombre);
+                       System.out.println("Training construido. "+nombre);
+                       //Realizar predicciones con TEST
+                       System.out.println("Realizando predicciones.... "+nombre);
+                       List<Movie_title> lMoviesRecom=new ArrayList<>();
+                       nombre="ratings_test_0.csv";
+                       lMoviesRecom=controller.RecommendMovies_PrecisionRecall(nombre);
+                   }  
+                   
+                    System.out.println("**********");
+                    System.out.println("Precision: ");
+                     System.out.println("Recall: ");
+                    System.out.println("**********");
+                    System.out.println();
                    
                     System.out.println();
                     System.out.println("-----------MENÚ----------");
@@ -118,7 +132,7 @@ public class Practica3_Recomendacion {
                    
                    
                    
-                   System.out.println("CALCULANDO nDCG....");
+                    System.out.println("CALCULANDO nDCG....");
                     System.out.println();
                     System.out.println("-----------MENÚ----------");
                     System.out.println("1. MAE");
@@ -131,12 +145,6 @@ public class Practica3_Recomendacion {
                default:
                    break;
            }
-        
-             
- 
        }
-     
     }
-       
-    
 }
