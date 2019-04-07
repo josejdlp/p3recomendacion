@@ -48,6 +48,7 @@ public class Controller {
     
     public int tp=0;
     public int fp=0;
+    public int fn=0;
     
    //similitud
      Map<Integer,List<Recomendacion>> mapComparadorItems;
@@ -75,6 +76,7 @@ public class Controller {
         
         tp=0;
         fp=0;
+        fn=0;
     }
     public void showMovies(){
         movieView.printMovies(listMovies);
@@ -184,6 +186,23 @@ public class Controller {
                       }
                   }
               }
+              //Calculamos fn: NO aparece en predicciones y en TEST >=3.5
+              for(Integer item:mapTestRating.get(idUser).keySet()){ 
+                  if(mapTestRating.get(idUser).get(item)>=3.5){
+                       boolean aparece=false;
+                        for(Recomendacion rec:listReducida){
+                            if(Objects.equals(rec.getIdMovie(), item)){
+                                aparece=true;
+                            }
+                        }
+                        if(aparece==false){
+                            fn=fn+1;
+                        }
+                  }
+                 
+              }
+              
+              
            }
            int r=3;
        }
@@ -192,6 +211,8 @@ public class Controller {
        Double prec=(double)tp/(tp+fp);
        precision=precision+prec;
        //RECALL
+       Double rec=(double)tp/(tp+fn);
+       recall=recall+rec;
        
        /*
        List<Integer> prodsNews=NewProducts(idUser);

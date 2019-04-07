@@ -116,7 +116,7 @@ public class Practica3_Recomendacion {
                    
                     System.out.println("**********");
                     System.out.println("Precision: "+(double)controller.precision/5);
-                    System.out.println("Recall: ");
+                    System.out.println("Recall: "+(double)controller.recall/4);
                     System.out.println("**********");
                     System.out.println();
                    
