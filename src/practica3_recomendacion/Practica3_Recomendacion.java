@@ -82,7 +82,7 @@ public class Practica3_Recomendacion {
                        System.out.println("Realizando predicciones.... "+nombre);
                        List<Movie_title> lMoviesRecom=new ArrayList<>();
                        nombre="ratings_test_"+i+".csv";
-                       lMoviesRecom=controller.RecommendMovies(nombre);
+                       lMoviesRecom=controller.RecommendMoviesMAE(nombre);
                    }  
                     System.out.println("**********");
                     System.out.println("MAE "+(controller.media/5));
@@ -108,13 +108,15 @@ public class Practica3_Recomendacion {
                        //Realizar predicciones con TEST
                        System.out.println("Realizando predicciones.... "+nombre);
                        List<Movie_title> lMoviesRecom=new ArrayList<>();
-                       nombre="ratings_test_0.csv";
+                       nombre="ratings_test_"+i+".csv";
                        lMoviesRecom=controller.RecommendMovies_PrecisionRecall(nombre);
+                       
+                      
                    }  
                    
                     System.out.println("**********");
-                    System.out.println("Precision: ");
-                     System.out.println("Recall: ");
+                    System.out.println("Precision: "+(double)controller.precision/5);
+                    System.out.println("Recall: ");
                     System.out.println("**********");
                     System.out.println();
                    
