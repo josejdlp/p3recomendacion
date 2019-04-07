@@ -206,21 +206,28 @@ public class Controller {
         return l;
     }
     
-      /*
     List<Movie_title> RecommendMoviesMAE(String ficheroTest){
-       List<Integer> list_usu_predicho=new ArrayList<>();
        List<Movie_title> l=new ArrayList<>();
+       int n=0;
+       Double total=0.0;
+        tp=0;
+       fp=0;
+       List<Integer> list_usu_predicho=new ArrayList<>();
+      
        //CargaTestPredicciones
        mapTestRating.clear();
        LoadFileTestRating(ficheroTest);
-        int n=0;
-       Double total=0.0;
        //por cada usuario del fichero test, pedimos la predicción
        for(Integer idUser:mapTestRating.keySet()){
            if(!list_usu_predicho.contains(idUser)){
                 //predecir solo 1 vez el usuario
                 list_usu_predicho.add(idUser);
-                List<Integer> prodsNews=NewProducts(idUser);
+                //List<Integer> prodsNews=NewProducts(idUser);
+                List<Integer> prodsNews=new ArrayList<>();
+                for(Integer item:mapTestRating.get(idUser).keySet()){
+                    prodsNews.add(item);
+                }
+                
                 //3) Calcular la predicción para las películas que NO HA VISTO
                 CalcularPredicciones(idUser,prodsNews);
                 List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
@@ -233,31 +240,24 @@ public class Controller {
                         listReducida.add(listFinal.get(i));
                     }
                 }
-                System.out.println("-+-+-+-+-+-+");
-                for(Recomendacion key:listReducida){
-                    System.out.println(mapMovies.get(key.getIdMovie())+" :"+key.getValor());
-                }
-                for(Recomendacion r:listReducida){
-                Double prediccion=r.getValor();
-                if(prediccion>0.0){
-                     Double real=mapTestRating.get(idUser).get(r.getIdMovie());
-                     Double diferencia=Math.abs(prediccion-real);
-                     total=total+diferencia;
-                     n=n+1;
-                }
-              }
                 
-               int rr=3;
+                for(Recomendacion r:listReducida){
+                    Double prediccion=r.getValor();
+                    if(prediccion>0.0){
+                         Double real=mapTestRating.get(idUser).get(r.getIdMovie());
+                         Double diferencia=Math.abs(prediccion-real);
+                         total=total+diferencia;
+                         n=n+1;
+                    }
+              }
            }
-           int r=3;
        }
-        Double resultado=total/n;
-       System.out.println("MAE:"+resultado);
+       Double resultado=total/n;
        media=media+resultado;
         return l;
-    }*/
+    }
       
-      
+      /*
     List<Movie_title> RecommendMoviesMAE(String ficheroTest){
        List<Movie_title> l=new ArrayList<>();
        //Cargar fichero test, sacar el idUsuario y productoAPredecir
@@ -289,7 +289,7 @@ public class Controller {
        media=media+resultado;
         return l;
     }
-    
+    */
     
     
      private void CalcularPredicciones(Integer idUser,List<Integer> prodsNews){
