@@ -42,9 +42,14 @@ public class Controller {
     private List<Movie_tag> listTags;
     private List<Rating> listRatings;
     private MovieView movieView;
+    
     public double media;
     public double precision;
     public double recall;
+    
+    private double dgc=0.0;
+    private double dgcPerfect=0.0;
+    public double dgcFinal=0.0;
     
     public int tp=0;
     public int fp=0;
@@ -126,6 +131,8 @@ public class Controller {
     
     
      List<Movie_title> RecommendMovies_PrecisionRecall(String ficheroTest){ 
+         dgc=0;
+         dgcPerfect=0;
        //Integer tp=0;
        //Integer fp=0;
        tp=0;
@@ -202,6 +209,45 @@ public class Controller {
                  
               }
               
+                //DISCOUNT COMULATIVE GAIN
+                List<Recomendacion> listReducidaPerfect=new ArrayList<>();
+                int i=1;
+               
+                for(Recomendacion rec:listReducida){
+                   double di=0.0;
+                   double log2=0.0;
+                   log2=Math.log(i)/Math.log(2);
+                   i++;
+                   if(log2<1){
+                       di=1;
+                   }else{
+                       di=1/log2;
+                   }
+                   double resul=rec.getValor()*di;
+                   if(resul>0){
+                        dgc=dgc+resul;
+                   }
+                  
+                   listReducidaPerfect.add(new Recomendacion(rec.getIdMovie(), mapTestRating.get(idUser).get(rec.getIdMovie())));
+                }
+               
+                int j=1;
+               for(Recomendacion rec:listReducidaPerfect){
+                   double di=0.0;
+                   double log2=0.0;
+                    log2=Math.log(j)/Math.log(2);
+                   j++;
+                   if(log2<1){
+                       di=1;
+                   }else{
+                       di=1/log2;
+                   }
+                   double resul=rec.getValor()*di;
+                   if(resul>0){
+                       dgcPerfect=dgcPerfect+resul;
+                   }
+                   
+                }
               
            }
            int r=3;
@@ -210,19 +256,18 @@ public class Controller {
        //PRECISION
        Double prec=(double)tp/(tp+fp);
        precision=precision+prec;
+       System.out.println("Precision: "+prec);
        //RECALL
        Double rec=(double)tp/(tp+fn);
        recall=recall+rec;
+       System.out.println("Recall: "+rec);
        
-       /*
-       List<Integer> prodsNews=NewProducts(idUser);
-       //3) Calcular la predicción para las películas que NO HA VISTO
-       CalcularPredicciones(idUser,prodsNews);
-       List<Recomendacion> listFinal=ordenarProdSim(listPredicciones);
-       //mostrar predicciones
-       for(Recomendacion key:listFinal){
-           System.out.println(mapMovies.get(key.getIdMovie())+" :"+key.getValor());
-       }*/
+       //DGC
+       Double total=(double)dgc/dgcPerfect;
+       dgcFinal=dgcFinal+total;
+      
+     
+      
        
         return l;
     }

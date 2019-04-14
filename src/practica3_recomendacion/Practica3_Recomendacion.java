@@ -62,8 +62,7 @@ public class Practica3_Recomendacion {
        System.out.println();
        System.out.println("-----------MENÚ----------");
        System.out.println("1. MAE");
-       System.out.println("2. Precision and Recall");
-       System.out.println("3. nDGC");
+       System.out.println("2. Precision/Recall y nDGC");
        System.out.println("-1. Salir");
        System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
        data = Integer.valueOf(reader.readLine());
@@ -90,8 +89,7 @@ public class Practica3_Recomendacion {
                     System.out.println();
                     System.out.println("-----------MENÚ----------");
                     System.out.println("1. MAE");
-                    System.out.println("2. Precision and Recall");
-                    System.out.println("3. nDGC");
+                    System.out.println("2. Precision/Recall y nDGC");
                     System.out.println("-1. Salir");
                     System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
                     data = Integer.valueOf(reader.readLine());
@@ -117,29 +115,13 @@ public class Practica3_Recomendacion {
                     System.out.println("**********");
                     System.out.println("Precision: "+(double)controller.precision/5);
                     System.out.println("Recall: "+(double)controller.recall/4);
+                    System.out.println("nDGC: "+(double)controller.dgcFinal/5);
                     System.out.println("**********");
                     System.out.println();
-                   
                     System.out.println();
                     System.out.println("-----------MENÚ----------");
                     System.out.println("1. MAE");
-                    System.out.println("2. Precision and Recall");
-                    System.out.println("3. nDGC");
-                    System.out.println("-1. Salir");
-                    System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
-                    data = Integer.valueOf(reader.readLine());
-                   break;
-               case 3:
-                   
-                   
-                   
-                   
-                    System.out.println("CALCULANDO nDCG....");
-                    System.out.println();
-                    System.out.println("-----------MENÚ----------");
-                    System.out.println("1. MAE");
-                    System.out.println("2. Precision and Recall");
-                    System.out.println("3. nDGC");
+                   System.out.println("2. Precision/Recall y nDGC");
                     System.out.println("-1. Salir");
                     System.out.println("Elija el método de evaluación para evaluar los alg. de predicción: ");
                     data = Integer.valueOf(reader.readLine());
